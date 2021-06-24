@@ -121,6 +121,6 @@ jupyter-nbconvert --to pdf example.ipynb
 
 ## Call to Action
 
-Take a look and see if you can setup and successfully run one of these demos on your system
-Give us feedback on your experience and things you would like to see 
-If you can, contribute back some notebooks or even support us in making them a little more standardized. 
+* Setup and successfully run one of these demos on your system.
+* Give us feedback on your experience and things you would like to see.
+* Contribute back some notebooks and support us in making them a little more standardized. 
