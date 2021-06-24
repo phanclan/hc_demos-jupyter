@@ -44,7 +44,9 @@ Jupyter excels when:
     * http://bit.ly/Jupyter_Headers-James 
     * http://bit.ly/Jupyter_Headers-Larry 
 
-DEMO
+## DEMO
+
+---
 
 ## Installation / Configuration of Jupyterlab
 
@@ -62,16 +64,20 @@ pip3 install bash_kernel
 python -m bash_kernel.install
 ```
 
-```
-#brew upgrade
-#brew install pyenv
-#pyenv versions
-#echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+For a more custom environment
+
+```shell
+brew upgrade
+brew install pyenv
+pyenv versions
+echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
 ```
 
+Additional Reference:
 https://medium.com/@blessedmarcel1/how-to-install-jupyter-notebook-on-mac-using-homebrew-528c39fd530f
 
-#### Extras
+### Extras
+
 Install Latex
 Mac - http://tug.org/mactex/mactex-download.html
 
@@ -84,7 +90,8 @@ You need to do more - install Anaconda and configure: https://mycarta.wordpress.
 Go to a folder that holds or will hold your Jupyter Notebook.
 Start up Jupyter Lab
 
-Mac :   
+Mac :
+
 ```shell
 jupyter lab
 ```
