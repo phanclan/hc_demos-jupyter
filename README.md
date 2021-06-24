@@ -12,45 +12,37 @@ Agenda:
 
 ## What is Jupyter / Jupyter Lab ?
 
-The Jupyter Notebook  is an open-source web application that allows you to create and share documents that contain live code, equations, visualizations and narrative text
-JupyterLab is a web-based interactive development environment for Jupyter notebooks, code, and data. JupyterLab is the next-generation user interface for Jupyter notebooks that is more modular, allows you to open multiple notebooks at once and provides other useful features. 
-
-
-Project Jupyter (https://jupyter.org/ ) is where it is hosted and maintained. 
-
-
+* **Jupyter Notebook** is an open-source web application that allows you to create and share documents that contain live code, equations, visualizations and narrative text
+* **JupyterLab** is a web-based interactive development environment for Jupyter notebooks, code, and data. JupyterLab is the next-generation user interface for Jupyter notebooks that is more modular, allows you to open multiple notebooks at once and provides other useful features. 
+* Project Jupyter (https://jupyter.org/ ) is where it is hosted and maintained. 
 
 ## The Use Case & Value 
 
 * Jupyter Lab can run different kernels. The most common is the python kernel. 
 * A lesser known kernel is the bash / shell kernel
-* Allows notebooks to be used like a bash shell 
-* We use Jupyter Lab to execute CLI commands to Vault , Nomad or Consul as part of a demo for a better experience
-
-> mmc tool to export certs
+* 💰: Allows notebooks to be used like a bash shell 
+* **Use Jupyter Lab to execute CLI commands to Vault, Nomad, Consul, or Terraform as part of a demo for a better experience**
 
 ## When to use Jupyter vs Instruqt
 
-
 Jupyter excels when: 
-You need to run a demo scenario with limited time
-You need to focus on telling a story and speaking
-You need to provide your audience with a history of the demo actions in a standard human readable format
-You need a non video recording of your demo
-You need to reuse your demo as a reference document 
-You need to customize the experience for the customer 
-
+* You need to run a demo scenario with limited time
+* You need to focus on telling a story and speaking
+* You need to provide your audience with a history of the demo actions in a standard human readable format
+* You need a non video recording of your demo
+* You need to reuse your demo as a reference document 
+* You need to customize the experience for the customer 
 
 ---
 
 ## Existing Content
 
-Ready to use demos:
-http://bit.ly/HC-SE-Demos
-To be moved into GH `hashicorp/solutions_eng` sub-org once available.
-Header artwork:
-http://bit.ly/Jupyter_Headers-James 
-http://bit.ly/Jupyter_Headers-Larry 
+* Ready to use demos:
+    * http://bit.ly/HC-SE-Demos
+    * To be moved into GH `hashicorp/solutions_eng` sub-org once available.
+* Header artwork:
+    * http://bit.ly/Jupyter_Headers-James 
+    * http://bit.ly/Jupyter_Headers-Larry 
 
 DEMO
 
