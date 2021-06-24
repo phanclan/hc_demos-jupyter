@@ -25,7 +25,8 @@ Agenda:
 
 ## When to use Jupyter vs Instruqt
 
-Jupyter excels when: 
+Jupyter excels when:
+
 * You need to run a demo scenario with limited time
 * You need to focus on telling a story and speaking
 * You need to provide your audience with a history of the demo actions in a standard human readable format
