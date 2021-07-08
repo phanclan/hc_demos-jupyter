@@ -60,9 +60,9 @@ brew update && brew doctor
 brew install python3
 brew install jupyterlab
 brew install pip3
-pip3 install ipykernel
-pip3 install bash_kernel
-python -m bash_kernel.install
+pip3 install ipykernel --user
+pip3 install bash_kernel --user
+python3 -m bash_kernel.install
 ```
 
 For a more custom environment
