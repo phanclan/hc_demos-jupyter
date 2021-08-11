@@ -88,8 +88,14 @@ Start up Jupyter Lab
 
 Mac :
 
+If installed from `brew`
 ```shell
 jupyter lab
+```
+
+If installed from `pip`
+```shell
+jupyter-lab
 ```
 
 or
