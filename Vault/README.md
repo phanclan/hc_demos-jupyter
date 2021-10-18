@@ -12,7 +12,7 @@ This is a summary that you can follow to progress through the labs for demos, Po
     * [Userpass - Allow password change](01-baseline/vault_userpass_pw_change.ipynb)
 1. Dynamic Secrets
     * [Database Dynamic Secrets](02-DBSecretsEngine/02-DBSecretEngine-Dynamic.ipynb)
-    * [AWS Dynamic Secrets](UCV07-AWSSEcrets.ipynb)
+    * [AWS Dynamic Secrets](UCV07-AWSSecrets.ipynb)
 	* [Terraform Secrets Engine](vault_terraform_secrets_engine.ipynb)
 1. HCP Vault
     * [HCP Vault Provision](HCPVault_100.ipynb)
