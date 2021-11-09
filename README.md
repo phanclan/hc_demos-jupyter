@@ -60,7 +60,7 @@ brew update && brew doctor
 brew install python3
 brew install jupyterlab
 pip3 install --upgrade pip wheel setuptools
-pip3 install ipykernel
+#pip3 install ipykernel #installed with jupyterlab
 pip3 install bash_kernel
 python3 -m bash_kernel.install
 ```
@@ -121,8 +121,6 @@ find terraform vault -name '*.ipynb' \
 Install Latex
 Mac - http://tug.org/mactex/mactex-download.html
 
-
-
 ```
 pip install -U notebook-as-pdf
 # For chromium
@@ -147,3 +145,8 @@ jupyter-nbconvert --to pdf example.ipynb
 * Terraform
 * Vault
 * Consul
+
+## Pull requests
+Jupyter Notebooks include the output of the commands directly into the Notebook.
+* Version control will have issues generating a useful diff.
+* Clear all output before uploading the notebook to git. There are other ideas around this as well [5,6], but nothing i looked into yet.
