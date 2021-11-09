@@ -81,6 +81,8 @@ https://medium.com/@blessedmarcel1/how-to-install-jupyter-notebook-on-mac-using-
 
 You need to do more - install Anaconda and configure: https://mycarta.wordpress.com/2019/07/09/from-zero-to-jupyterlab-pro-on-windows-10/
 
+---
+
 ## Start Jupyter Lab - Mac and Windows
 
 Go to a folder that holds or will hold your Jupyter Notebook.
