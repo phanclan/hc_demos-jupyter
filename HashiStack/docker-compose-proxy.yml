@@ -1,0 +1,65 @@
+version: '3.7'
+# networks:
+#   vpcbr:
+#     external: true
+  # vault_secondary:
+  #   external: true
+  # vault_dr:
+  #   external: true    
+
+services:
+  haproxy:
+    image: haproxy:latest #2.0
+    container_name: haproxy
+    networks:
+      # - vault_primary
+      # - vault_secondary
+      # - vault_dr
+      vpcbr:
+        ipv4_address: 10.5.0.112
+    environment:
+      - LOG_LEVEL=debug
+      - APACHE_1_IP=${APACHE_1_IP}
+      - APACHE_2_IP=${APACHE_2_IP}
+      - APACHE_EXPOSED_PORT=${APACHE_EXPOSED_PORT}
+    ports:
+      - "18200:8200"
+      - "8901:9200"
+      - "11936:1936"
+      - 1080:1080
+    volumes:
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    # depends_on:
+    #   - vault_s2
+
+  # apache_img_1:
+  #   container_name: apache_con_1
+  #   build: ./apache/1
+  #   expose:
+  #     - ${APACHE_EXPOSED_PORT}
+  #   networks:
+  #     vpcbr:
+  #       ipv4_address: ${APACHE_1_IP}
+  # apache_img_2:
+  #   container_name: apache_con_2
+  #   build: ./apache/2
+  #   expose:
+  #     - ${APACHE_EXPOSED_PORT}
+  #   networks:
+  #     vpcbr:
+  #       ipv4_address: ${APACHE_2_IP}
+  # haproxy_img:
+  #   # build: ./haproxy
+  #   image: haproxy:1.7 #2.0
+  #   container_name: haproxy_test
+  #   ports:
+  #     - 1080:80
+  #   networks:
+  #     vpcbr:
+  #       ipv4_address: ${HA_PROXY_IP}
+  #   environment:
+  #     - APACHE_1_IP=${APACHE_1_IP}
+  #     - APACHE_2_IP=${APACHE_2_IP}
+  #     - APACHE_EXPOSED_PORT=${APACHE_EXPOSED_PORT}
+  #   volumes:
+  #     - ./docker/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
