@@ -1,15 +1,17 @@
 version: "3.7"
 
 services:
-
-  consul-agent-1: &consul_agent
+  x-consul: &consul
     image: hashicorp/consul-enterprise:1.9-ent
-    container_name: consul-agent-1
-    hostname: consul-agent-1
     environment:
       - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
+
+  consul-agent-1: &consul_agent
+    <<: *consul
+    container_name: consul-agent-1
+    hostname: consul-agent-1
     # restart: always
-    command: "agent -datacenter=west -retry-join consul-server-0 -client 0.0.0.0 -node=App1"
+    command: "agent -datacenter=${CONSUL_DC} -retry-join consul-server-0 -client 0.0.0.0 -node=App1"
     volumes:
       - ./consul/config/client.hcl:/consul/config/client.hcl
       - ./consul/cert/client:/consul/cert
@@ -25,13 +27,11 @@ services:
     #     loki-url: 'http://localhost:3100/api/prom/push'
 
   consul-server-0:
-    image: hashicorp/consul-enterprise:1.9-ent
+    <<: *consul
     container_name: consul-server-0
     hostname: consul-server-0
-    environment:
-      - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
     # restart: always
-    command: "agent -datacenter=west -server -config-dir=/consul/config"
+    command: "agent -datacenter=${CONSUL_DC} -server -config-dir=/consul/config"
     volumes:
       - ./consul/config/server.hcl:/consul/config/server.hcl
       - ./consul/config/acl.hcl:/consul/config/acl.hcl
@@ -53,7 +53,7 @@ services:
     #     loki-url: 'http://localhost:3100/api/prom/push'
 
   consul-server-1:
-    <<: *consul_agent
+    <<: *consul
     container_name: consul-server-1
     hostname: consul-server-1
     volumes:
@@ -63,13 +63,13 @@ services:
       - /consul/data
       - ./consul/policies:/consul/policies
       - /etc/consul/logs
-    command: "agent -datacenter=west -server -config-dir=/consul/config"
+    command: "agent -datacenter=${CONSUL_DC} -server -config-dir=/consul/config"
     networks:
       vpcbr:
         ipv4_address: 10.5.0.3
 
   consul-server-2:
-    <<: *consul_agent
+    <<: *consul
     container_name: consul-server-2
     hostname: consul-server-2
     volumes:
@@ -84,7 +84,7 @@ services:
       vpcbr:
         ipv4_address: 10.5.0.4
   consul-server-3:
-    <<: *consul_agent
+    <<: *consul
     # image: hashicorp/consul-enterprise:1.9-ent
     image: hashicorp/consul-enterprise:latest
     container_name: consul-server-3
@@ -99,7 +99,7 @@ services:
       - /etc/consul/logs
     environment:
       - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
-    command: "agent -datacenter=west -server -config-dir=/consul/config"
+    command: "agent -datacenter=${CONSUL_DC} -server -config-dir=/consul/config"
     networks:
       vpcbr:
   consul-server-4:
@@ -116,9 +116,7 @@ services:
       - /consul/data
       - ./consul/policies:/consul/policies
       - /etc/consul/logs
-    environment:
-      - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
-    command: "agent -datacenter=west -server -config-dir=/consul/config"
+    command: "agent -datacenter=${CONSUL_DC} -server -config-dir=/consul/config"
     networks:
       vpcbr:
   consul-server-5:
@@ -135,15 +133,26 @@ services:
       - /consul/data
       - ./consul/policies:/consul/policies
       - /etc/consul/logs
-    environment:
-      - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
-    command: "agent -datacenter=west -server -config-dir=/consul/config"
+    command: "agent -datacenter=${CONSUL_DC} -server -config-dir=/consul/config"
     networks:
       vpcbr:
     #     ipv4_address: 10.5.0.4
 
-  vault_s1:
+  x-vault: &vault
     image: hashicorp/vault-enterprise:1.7.5_ent
+    environment:
+      - VAULT_ADDR=http://127.0.0.1:8200
+      #- VAULT_CLUSTER_INTERFACE=eth0
+      - VAULT_REDIRECT_INTERFACE=eth0
+      #- VAULT_API_ADDR=http://vault01:8200
+      - VAULT_LOG_LEVEL=debug
+      - VAULT_LICENSE_PATH=/vault/config/vault.hclic
+    command: vault server -config=/vault/config
+    cap_add:
+      - IPC_LOCK
+
+  vault_s1:
+    <<: *vault
     container_name: vault_s1
     hostname: vault_s1
     volumes:
@@ -159,9 +168,6 @@ services:
       #- VAULT_API_ADDR=http://vault01:8200
       - VAULT_LOG_LEVEL=debug
       - VAULT_LICENSE_PATH=/vault/config/vault.hclic
-    command: vault server -config=/vault/config
-    cap_add:
-      - IPC_LOCK
     # depends_on:
     #   - consul_agent_1
     networks:
@@ -169,7 +175,7 @@ services:
         ipv4_address: 10.5.0.101
   
   vault_s2: &vault_server
-    image: hashicorp/vault-enterprise:1.7.5_ent
+    <<: *vault
     container_name: vault_s2
     hostname: vault_s2
     volumes:
@@ -180,8 +186,6 @@ services:
     depends_on:
       - vault_s1
     command: vault server -config=/vault/config
-    cap_add:
-      - IPC_LOCK
     networks:
       vpcbr:
         ipv4_address: 10.5.0.102
@@ -194,11 +198,23 @@ services:
       - ./vault/config/vault_s3:/vault/config
       - ./vault/config/vault.hclic:/vault/config/vault.hclic
       - /vault/data
-      - ./vault/logs/vaults_s3:/vault/logs
-    command: vault server -config=/vault/config
+      - ./vault/logs/vault_s3:/vault/logs
     networks:
       vpcbr:
         ipv4_address: 10.5.0.103
+
+  vault_s4:
+    <<: *vault_server
+    container_name: vault_s4
+    hostname: vault_s4
+    volumes:
+      - ./vault/config/vault_s4:/vault/config
+      - ./vault/config/vault.hclic:/vault/config/vault.hclic
+      - /vault/data
+      - ./vault/logs/vault_s4:/vault/logs
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.104
 
 networks:
   vpcbr:
