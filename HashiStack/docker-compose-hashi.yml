@@ -101,6 +101,10 @@ services:
     environment:
       - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
     command: "agent -datacenter=${CONSUL_DC_2} -server -config-dir=/consul/config"
+    ports:
+      - "8620:8600/tcp"
+      - "8620:8600/udp"
+      - "8520:8500/tcp"
     networks:
       vpcbr:
         ipv4_address: 10.5.1.2
@@ -120,6 +124,8 @@ services:
     networks:
       vpcbr:
         ipv4_address: 10.5.1.3
+    depends_on:
+      - consul-server-3
   consul-server-5:
     <<: *consul_dc2
     image: hashicorp/consul-enterprise:latest
@@ -137,9 +143,11 @@ services:
     networks:
       vpcbr:
         ipv4_address: 10.5.1.4
+    depends_on:
+      - consul-server-3
 
   x-vault: &vault
-    image: hashicorp/vault-enterprise:1.7.5_ent
+    image: hashicorp/vault-enterprise:1.8.5_ent
     environment:
       - VAULT_ADDR=http://127.0.0.1:8200
       #- VAULT_CLUSTER_INTERFACE=eth0
@@ -198,7 +206,7 @@ services:
         ipv4_address: 10.5.0.103
 
   vault_s4:
-    <<: *vault_server
+    <<: *vault
     container_name: vault_s4
     hostname: vault_s4
     volumes:
