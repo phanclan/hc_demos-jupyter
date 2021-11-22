@@ -1,16 +1,33 @@
-version: "3.7"
+version: "3.8"
+
+networks:
+  vpcbr:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 10.5.0.0/16
+# networks:
+#   vpcbr:
+#     external: true
+  # vault_secondary:
+  #   external: true
+  # vault_dr:
+  #   external: true   
 
 services:
   x-consul: &consul
     image: hashicorp/consul-enterprise:1.9-ent
     environment:
       - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
+    # logging:
+    #   driver: loki
+    #   options:
+    #     loki-url: 'http://localhost:3100/api/prom/push'
 
   consul-agent-1: &consul_agent
     <<: *consul
     container_name: consul-agent-1
     hostname: consul-agent-1
-    # restart: always
     command: "agent -datacenter=${CONSUL_DC} -retry-join consul-server-0 -client 0.0.0.0 -node=App1"
     volumes:
       - ./consul/config/client.hcl:/consul/config/client.hcl
@@ -21,23 +38,17 @@ services:
         ipv4_address: 10.5.0.12
     # depends_on:
     #   - consul-server-0
-    # logging:
-    #   driver: loki
-    #   options:
-    #     loki-url: 'http://localhost:3100/api/prom/push'
 
   consul-server-0:
     <<: *consul
     container_name: consul-server-0
     hostname: consul-server-0
-    # restart: always
-    command: "agent -datacenter=${CONSUL_DC} -server -config-dir=/consul/config"
+    command: "agent -datacenter=${CONSUL_DC} -server -bootstrap-expect 3 -config-dir=/consul/config"
     volumes:
       - ./consul/config/server.hcl:/consul/config/server.hcl
       - ./consul/config/acl.hcl:/consul/config/acl.hcl
       - ./consul/cert/server:/consul/cert
       - /consul/data
-      - /etc/consul/logs
     ports:
       - "8600:8600/tcp"
       - "8600:8600/udp"
@@ -47,10 +58,6 @@ services:
     networks:
       vpcbr:
         ipv4_address: 10.5.0.2
-    # logging:
-    #   driver: loki
-    #   options:
-    #     loki-url: 'http://localhost:3100/api/prom/push'
 
   consul-server-1:
     <<: *consul
@@ -62,7 +69,6 @@ services:
       - ./consul/cert/server:/consul/cert
       - /consul/data
       - ./consul/policies:/consul/policies
-      - /etc/consul/logs
     command: "agent -datacenter=${CONSUL_DC} -server -config-dir=/consul/config"
     networks:
       vpcbr:
@@ -78,7 +84,6 @@ services:
       - ./consul/cert/server:/consul/cert
       - /consul/data
       - ./consul/policies:/consul/policies
-      - /etc/consul/logs
     command: "agent -datacenter=west -server -config-dir=/consul/config"
     networks:
       vpcbr:
@@ -86,8 +91,8 @@ services:
 
   consul-server-3: &consul_dc2
     <<: *consul
-    # image: hashicorp/consul-enterprise:1.9-ent
-    image: hashicorp/consul-enterprise:latest
+    image: hashicorp/consul-enterprise:1.9-ent
+    # image: hashicorp/consul-enterprise:latest
     container_name: consul-server-3
     hostname: consul-server-3
     volumes:
@@ -97,14 +102,9 @@ services:
       - ./consul/cert/server:/consul/cert
       - /consul/data
       - ./consul/policies:/consul/policies
-      - /etc/consul/logs
     environment:
       - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
     command: "agent -datacenter=${CONSUL_DC_2} -server -config-dir=/consul/config"
-    ports:
-      - "8620:8600/tcp"
-      - "8620:8600/udp"
-      - "8520:8500/tcp"
     networks:
       vpcbr:
         ipv4_address: 10.5.1.2
@@ -119,7 +119,6 @@ services:
       - ./consul/cert/server:/consul/cert
       - /consul/data
       - ./consul/policies:/consul/policies
-      - /etc/consul/logs
     command: "agent -datacenter=${CONSUL_DC_2} -server -config-dir=/consul/config"
     networks:
       vpcbr:
@@ -128,7 +127,6 @@ services:
       - consul-server-3
   consul-server-5:
     <<: *consul_dc2
-    image: hashicorp/consul-enterprise:latest
     container_name: consul-server-5
     hostname: consul-server-5
     volumes:
@@ -138,8 +136,11 @@ services:
       - ./consul/cert/server:/consul/cert
       - /consul/data
       - ./consul/policies:/consul/policies
-      - /etc/consul/logs
     command: "agent -datacenter=${CONSUL_DC_2} -server -config-dir=/consul/config"
+    ports:
+      - "8620:8600/tcp"
+      - "8620:8600/udp"
+      - "8520:8500/tcp"
     networks:
       vpcbr:
         ipv4_address: 10.5.1.4
@@ -214,20 +215,37 @@ services:
       - ./vault/config/vault.hclic:/vault/config/vault.hclic
       - /vault/data
       - ./vault/logs/vault_s4:/vault/logs
+    ports:
+      - "8210:8200/tcp"
     networks:
       vpcbr:
         ipv4_address: 10.5.0.104
 
-networks:
-  vpcbr:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 10.5.0.0/16
-# networks:
-#   vpcbr:
-#     external: true
-  # vault_secondary:
-  #   external: true
-  # vault_dr:
-  #   external: true   
+  vault_s5:
+    <<: *vault
+    container_name: vault_s5
+    hostname: vault_s5
+    volumes:
+      - ./vault/config/vault_s5:/vault/config
+      - ./vault/config/vault.hclic:/vault/config/vault.hclic
+      - /vault/data
+      - ./vault/logs/vault_s5:/vault/logs
+    ports:
+      - "8220:8200/tcp"
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.105
+
+  vault_s6:
+    <<: *vault
+    container_name: vault_s6
+    hostname: vault_s6
+    volumes:
+      - ./vault/config/vault_s6:/vault/config
+      - ./vault/config/vault.hclic:/vault/config/vault.hclic
+      - /vault/data
+      - ./vault/logs/vault_s6:/vault/logs
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.106
+
