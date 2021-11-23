@@ -156,7 +156,9 @@ services:
       #- VAULT_API_ADDR=http://vault01:8200
       - VAULT_LOG_LEVEL=debug
       - VAULT_LICENSE_PATH=/vault/config/vault.hclic
-    command: vault server -config=/vault/config
+      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
+      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_TOKEN}
+    command: vault server -dev -dev-listen-address "0.0.0.0:8200"
     cap_add:
       - IPC_LOCK
 
@@ -248,22 +250,4 @@ services:
     networks:
       vpcbr:
         ipv4_address: 10.5.0.106
-
-  db:
-    image: postgres
-    container_name: postgres
-    ports:
-      - 5432:5432
-    environment:
-      # - POSTGRES_DB=boundary
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 3s
-      timeout: 5s
-      retries: 5
-    networks:
-      vpcbr:
-
 
