@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 # networks:
 #   vpcbr:
 #     external: true
@@ -32,15 +32,36 @@ services:
     # depends_on:
     #   - vault_s2
 
+  node-exporter:
+    image: prom/node-exporter:v1.1.2
+    container_name: node-exporter
+    restart: always
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command: 
+      - '--path.procfs=/host/proc' 
+      - '--path.sysfs=/host/sys'
+      - --collector.filesystem.ignored-mount-points
+      - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.7
+    ports:
+      - 9100:9100
+
+
   prometheus:
     image: prom/prometheus:v2.26.0
     container_name: prometheus
     restart: always
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus-token:/etc/prometheus/prometheus-token
     entrypoint:
       - /bin/prometheus
-      - --config.file=/etc/prometheus.yml
+      - --config.file=/etc/prometheus/prometheus.yml
     networks:
       vpcbr:
         ipv4_address: 10.5.0.8
@@ -52,19 +73,40 @@ services:
     container_name: grafana
     restart: always
     volumes:
-      - ./grafana/provisioning/datasources/datasource.yml:/etc/grafana/provisioning/datasources/prometheus_datasource.yml
+      # - ./grafana/provisioning/datasources/datasource.yml:/etc/grafana/provisioning/datasources/prometheus_datasource.yml
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/dashboards:/var/lib/grafana/dashboards
-    # environment:
-    #   - GF_AUTH_ANONYMOUS_ENABLED=true
-    #   - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-    #   - GF_AUTH_DISABLE_LOGIN_FORM=true
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
     networks:
       vpcbr:
         ipv4_address: 10.5.0.10
     ports:
       - "3000:3000"
 
+  cadvisor:
+    # image: gcr.io/cadvisor/cadvisor:latest #non arm64
+    image: raymondmm/cadvisor #arm64
+    container_name: cadvisor
+    restart: on-failure
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      #// for oom error https://github.com/google/cadvisor/issues/2150
+      - /dev/kmsg:/dev/kmsg
+    networks:
+      vpcbr:
+        ipv4_address: 10.5.0.11
 
   # apache_img_1:
   #   container_name: apache_con_1

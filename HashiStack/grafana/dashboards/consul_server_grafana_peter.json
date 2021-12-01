@@ -17,9 +17,23 @@
   "gnetId": 13396,
   "graphTooltip": 0,
   "id": 5,
-  "iteration": 1638326233770,
+  "iteration": 1638395436816,
   "links": [],
   "panels": [
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 87,
+      "panels": [],
+      "title": "Row title",
+      "type": "row"
+    },
     {
       "cacheTimeout": null,
       "colorBackground": false,
@@ -46,7 +60,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 72,
       "interval": null,
@@ -148,7 +162,7 @@
         "h": 5,
         "w": 4,
         "x": 4,
-        "y": 0
+        "y": 1
       },
       "id": 83,
       "interval": null,
@@ -223,7 +237,7 @@
         "h": 5,
         "w": 4,
         "x": 8,
-        "y": 0
+        "y": 1
       },
       "id": 81,
       "interval": null,
@@ -299,7 +313,7 @@
         "h": 5,
         "w": 4,
         "x": 12,
-        "y": 0
+        "y": 1
       },
       "id": 79,
       "interval": null,
@@ -375,7 +389,7 @@
         "h": 5,
         "w": 4,
         "x": 16,
-        "y": 0
+        "y": 1
       },
       "id": 77,
       "interval": null,
@@ -457,7 +471,7 @@
         "h": 5,
         "w": 4,
         "x": 20,
-        "y": 0
+        "y": 1
       },
       "id": 75,
       "interval": null,
@@ -510,7 +524,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 5
+        "y": 6
       },
       "id": 64,
       "options": {
@@ -530,7 +544,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 14
       },
       "id": 85,
       "panels": [],
@@ -552,10 +566,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -567,7 +577,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 14
+        "y": 15
       },
       "id": 73,
       "options": {
@@ -621,7 +631,7 @@
         "h": 5,
         "w": 9,
         "x": 4,
-        "y": 14
+        "y": 15
       },
       "hiddenSeries": false,
       "id": 65,
@@ -733,7 +743,7 @@
         "h": 5,
         "w": 11,
         "x": 13,
-        "y": 14
+        "y": 15
       },
       "hiddenSeries": false,
       "id": 4,
@@ -764,7 +774,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(consul_raft_apply[5m])",
+          "expr": "rate(consul_raft_apply[${interval}])",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -776,7 +786,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Raft Transaction Apply Time per 5m",
+      "title": "Raft Transaction Apply Time",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -832,18 +842,20 @@
         "h": 7,
         "w": 13,
         "x": 0,
-        "y": 19
+        "y": 20
       },
       "hiddenSeries": false,
       "id": 66,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
-        "max": false,
+        "current": true,
+        "max": true,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -863,7 +875,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "consul_raft_commitTime{quantile=\"0.9\"}",
+          "expr": "consul_raft_commitTime{quantile=\"0.9\"} !=0",
           "interval": "",
           "legendFormat": "{{instance}}",
           "refId": "A"
@@ -872,7 +884,7 @@
       "thresholds": [
         {
           "colorMode": "critical",
-          "fill": true,
+          "fill": false,
           "line": true,
           "op": "gt",
           "value": 600,
@@ -880,7 +892,7 @@
         },
         {
           "colorMode": "warning",
-          "fill": true,
+          "fill": false,
           "line": true,
           "op": "gt",
           "value": 300,
@@ -933,7 +945,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "description": "This measures the time it takes to complete an update to the KV store.\n\nNOTE: If there are too many timeseries here from clients, consider filtering down to server hosts. You can set this with a prometheus scrape target based on the node's role.",
+      "description": "This measures the time it takes to complete an update to the KV store.\n\nNOTE: If there are too many timeseries here from clients, consider filtering down to server hosts. You can set this with a prometheus scrape target based on the node's role.\n",
       "fieldConfig": {
         "defaults": {
           "unit": "ms"
@@ -946,18 +958,23 @@
         "h": 7,
         "w": 11,
         "x": 13,
-        "y": 19
+        "y": 20
       },
       "hiddenSeries": false,
       "id": 20,
       "legend": {
-        "avg": false,
+        "alignAsTable": false,
+        "avg": true,
         "current": false,
-        "max": false,
+        "hideEmpty": true,
+        "hideZero": false,
+        "max": true,
         "min": false,
+        "rightSide": false,
         "show": true,
+        "sideWidth": null,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -977,27 +994,27 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "consul_kvs_apply{quantile=\"0.9\"}",
+          "expr": "consul_kvs_apply{quantile=\"0.9\"} !=0",
           "interval": "",
-          "legendFormat": "{{instance}} kvs.apply",
+          "legendFormat": "{{instance}}",
           "refId": "A"
         }
       ],
       "thresholds": [
         {
           "colorMode": "critical",
-          "fill": true,
+          "fill": false,
           "line": true,
           "op": "gt",
-          "value": 300,
+          "value": 3000,
           "yaxis": "left"
         },
         {
           "colorMode": "warning",
-          "fill": true,
+          "fill": false,
           "line": true,
           "op": "gt",
-          "value": 200,
+          "value": 1000,
           "yaxis": "left"
         }
       ],
@@ -1020,14 +1037,16 @@
       },
       "yaxes": [
         {
+          "decimals": null,
           "format": "ms",
-          "label": null,
+          "label": "",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
+          "decimals": null,
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1048,82 +1067,12 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 27
       },
       "id": 8,
       "panels": [],
       "title": "Consul Server Behavior",
       "type": "row"
-    },
-    {
-      "datasource": "Prometheus",
-      "description": "consul_raft_commitTime should remain stable throughout the life of a healthy Consul cluster. p99 slowdowns typically mean that transient issues have occurred, while consistently higher-than-normal averages typically mean that one or more nodes lacks critical resources like memory, CPU, or disk space. ",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 90
-              },
-              {
-                "color": "red",
-                "value": 180
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 27
-      },
-      "id": 2,
-      "interval": null,
-      "maxDataPoints": null,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "consul_raft_commitTime{quantile=\"0.9\"}",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "{{instance}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Raft Commit Time",
-      "type": "stat"
     },
     {
       "collapsed": false,
@@ -1132,11 +1081,11 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 28
       },
       "id": 10,
       "panels": [],
-      "title": "Server Cluster Health - Leadership and Autopilot",
+      "title": "Consul Server Cluster Health - Leadership and Autopilot",
       "type": "row"
     },
     {
@@ -1158,7 +1107,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 29
       },
       "hiddenSeries": false,
       "id": 12,
@@ -1257,7 +1206,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 36
+        "y": 29
       },
       "hiddenSeries": false,
       "id": 16,
@@ -1347,81 +1296,17 @@
       }
     },
     {
-      "datasource": "Prometheus",
-      "description": "A boolean value that will show 1 if there are no issues, and 0 if autopilot has detected an issue. First, ensure that the cluster has an operational leader. If so, ensure that all nodes have sufficient IO throughput and memory.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 12,
-        "y": 43
-      },
-      "id": 14,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "consul_autopilot_healthy",
-          "interval": "",
-          "legendFormat": "{{instance}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Autopilot Health",
-      "transformations": [],
-      "type": "stat"
-    },
-    {
       "collapsed": false,
-      "datasource": "Prometheus",
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 49
+        "y": 36
       },
-      "id": 31,
+      "id": 99,
       "panels": [],
-      "title": "System Stats",
+      "title": "Network Activity - RPC Count - Shows current load created from Agents",
       "type": "row"
     },
     {
@@ -1429,39 +1314,44 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "${datasource}",
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "links": []
+        },
         "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 8,
-        "w": 24,
+        "h": 6,
+        "w": 12,
         "x": 0,
-        "y": 50
+        "y": 37
       },
       "hiddenSeries": false,
-      "id": 33,
+      "id": 101,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
+      "links": [],
       "nullPointMode": "null",
       "options": {
         "alertThreshold": true
       },
       "percentage": false,
       "pluginVersion": "7.5.3",
-      "pointradius": 2,
+      "pointradius": 5,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
@@ -1470,17 +1360,27 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "",
+          "exemplar": true,
+          "expr": "rate({__name__=~\"consul_rpc_query.*\"}[${interval}])",
+          "hide": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{instance}} rpc queries",
           "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(consul_client_rpc[${interval}])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} client rpc queries",
+          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "[TODO] Please ensure Consul has CPU, Disk, Memory, and Network bandwidth headroom available! We recommend creating panels here, querying your host stats for each.",
+      "title": "Consul RPC Query Rate",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1518,72 +1418,127 @@
       }
     },
     {
-      "datasource": "Prometheus",
-      "description": "Consul provides per-host stats for runtime.sys_bytes and `runtime.gc_pause_ns `",
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${datasource}",
+      "description": "Increments whenever a Consul agent in client mode makes an RPC request to a Consul server\n* gets rate limited by that agent's limits configuration\n* or fails.",
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 1000000000
-              },
-              {
-                "color": "red",
-                "value": 2000000000
-              }
-            ]
-          },
-          "unit": "ns"
+          "links": []
         },
         "overrides": []
       },
+      "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 0,
-        "y": 58
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 37
       },
-      "id": 43,
-      "maxDataPoints": 100,
+      "hiddenSeries": false,
+      "id": 102,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
       "options": {
-        "colorMode": "background",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
+        "alertThreshold": true
       },
+      "percentage": false,
       "pluginVersion": "7.5.3",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(consul_runtime_total_gc_pause_ns[5m])",
+          "expr": "rate(consul_client_rpc_exceeded[${interval}])",
+          "hide": false,
           "interval": "",
-          "legendFormat": "{{instance}}",
-          "refId": "A"
+          "legendFormat": "{{instance}} exceeded",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(consul_client_rpc_failed[${interval}])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} failed",
+          "refId": "D"
         }
       ],
+      "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
-      "title": "Runtime Total GC Pause",
-      "type": "stat"
+      "title": "Consul Client RPC Query Exceeded/Failed",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 43
+      },
+      "id": 31,
+      "panels": [],
+      "title": "System Stats",
+      "type": "row"
     },
     {
       "datasource": "Prometheus",
@@ -1610,144 +1565,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 7,
-        "y": 58
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 44
       },
-      "id": 62,
-      "links": [],
-      "options": {
-        "colorMode": "background",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "container_memory_usage_bytes{image!=\"\",name=~\"consul-server-.*\"}",
-          "hide": false,
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "{{name}}",
-          "metric": "container_memory_usage_bytes",
-          "refId": "A",
-          "step": 10
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Memory Usage",
-      "type": "stat"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 10000000
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 14,
-        "y": 58
-      },
-      "id": 58,
-      "links": [],
-      "options": {
-        "displayMode": "gradient",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showUnfilled": true,
-        "text": {}
-      },
-      "pluginVersion": "7.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "irate(container_network_receive_bytes_total{image!=\"\",name=~\"consul-.*\"}[5m])",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "{{name}}",
-          "metric": "container_network_receive_bytes_total",
-          "refId": "A",
-          "step": 20
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Network Rx",
-      "type": "bargauge"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 10000000
-              }
-            ]
-          },
-          "unit": "Bps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 19,
-        "y": 58
-      },
-      "id": 60,
-      "links": [],
+      "id": 33,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -1766,8 +1589,398 @@
       "pluginVersion": "7.5.3",
       "targets": [
         {
+          "expr": "",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "[TODO] Please ensure Consul has CPU, Disk, Memory, and Network bandwidth headroom available! We recommend creating panels here, querying your host stats for each.",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 45
+      },
+      "hiddenSeries": false,
+      "id": 89,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
           "exemplar": true,
-          "expr": "irate(container_network_transmit_bytes_total{image!=\"\",name=~\"consul-.*\"}[5m])",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{instance=~\".+\",name=~\"consul-.+\"}[$interval])) by (name) *100",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 45
+      },
+      "hiddenSeries": false,
+      "id": 62,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(container_memory_rss{name=~\"consul.+\"}) by (name)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{name}}",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "container_memory_usage_bytes{image!=\"\",name=~\"consul-server-.*\"}",
+          "hide": true,
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{name}}",
+          "metric": "container_memory_usage_bytes",
+          "refId": "A",
+          "step": 10
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Memory Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "sum(rate(container_network_receive_bytes_total{image!=\"\",name=~\"consul-.*\"}[5m])) by (name)",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 52
+      },
+      "hiddenSeries": false,
+      "id": 58,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "hideEmpty": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sideWidth": null,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(rate(container_network_receive_bytes_total{image!=\"\",name=~\"consul-.*\"}[$interval])) by (name)",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{name}}",
+          "metric": "container_network_receive_bytes_total",
+          "refId": "A",
+          "step": 20
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(rate(container_network_transmit_bytes_total{image!=\"\",name=~\"consul-.*\"}[5m])) by (name)",
+          "hide": true,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{name}} Transmit",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": false,
+          "line": true,
+          "op": "gt",
+          "value": 100000,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Network Rx",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "Bps",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 52
+      },
+      "hiddenSeries": false,
+      "id": 60,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(rate(container_network_transmit_bytes_total{image!=\"\",name=~\"consul-.*\"}[5m])) by (name)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{name}}",
@@ -1775,10 +1988,46 @@
           "step": 20
         }
       ],
+      "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Network Tx",
-      "type": "stat"
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "Bps",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "collapsed": false,
@@ -1787,7 +2036,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 65
+        "y": 59
       },
       "id": 23,
       "panels": [],
@@ -1802,30 +2051,29 @@
       "datasource": "Prometheus",
       "description": "Shows the rate of domain queries per node, bucketed into 5 minute intervals.",
       "fieldConfig": {
-        "defaults": {
-          "displayName": "queries/5m",
-          "unit": "queries/5m"
-        },
+        "defaults": {},
         "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 16,
-        "w": 12,
+        "h": 8,
+        "w": 8,
         "x": 0,
-        "y": 66
+        "y": 60
       },
       "hiddenSeries": false,
       "id": 29,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1844,9 +2092,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(consul_dns_domain_query_count[5m])",
+          "exemplar": true,
+          "expr": "rate(consul_dns_domain_query_count[$interval])",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{node}}",
           "refId": "A"
         }
       ],
@@ -1854,7 +2103,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "DNS Queries per 5m",
+      "title": "DNS Queries per interval",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1870,7 +2119,7 @@
       },
       "yaxes": [
         {
-          "format": "queries/5m",
+          "format": "none",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -1908,9 +2157,9 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 66
+        "w": 8,
+        "x": 8,
+        "y": 60
       },
       "hiddenSeries": false,
       "id": 39,
@@ -1943,7 +2192,7 @@
           "exemplar": true,
           "expr": "consul_dns_domain_query{quantile=\"0.9\"}",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{node}}",
           "refId": "A"
         }
       ],
@@ -2005,20 +2254,22 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 74
+        "w": 8,
+        "x": 16,
+        "y": 60
       },
       "hiddenSeries": false,
       "id": 37,
       "legend": {
-        "avg": false,
+        "alignAsTable": true,
+        "avg": true,
         "current": false,
-        "max": false,
+        "max": true,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2037,9 +2288,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "consul_dns_ptr_query",
+          "exemplar": true,
+          "expr": "consul_dns_ptr_query{quantile=\"0.9\"}",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{node}}",
           "refId": "A"
         }
       ],
@@ -2085,282 +2337,283 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": "Prometheus",
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 82
+        "y": 68
       },
       "id": 18,
-      "panels": [],
+      "panels": [
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "description": "Shows the rate of KV operations in 5 minute buckets. ",
+          "fieldConfig": {
+            "defaults": {
+              "displayName": "ops/5m",
+              "unit": "ops/5m"
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 16,
+            "w": 12,
+            "x": 0,
+            "y": 70
+          },
+          "hiddenSeries": false,
+          "id": 35,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "7.5.3",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "rate(consul_kvs_apply_count[5m])",
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "KV Applies per 5m",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "ops/5m",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        },
+        {
+          "datasource": "Prometheus",
+          "description": "This measures the time it takes to complete an update to the KV store.\n\nNOTE: If there are too many timeseries here from clients, consider filtering down to server hosts. You can set this with a prometheus scrape target based on the node's role.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 70
+          },
+          "id": 56,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "area",
+            "justifyMode": "auto",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "text": {},
+            "textMode": "auto"
+          },
+          "pluginVersion": "7.5.3",
+          "targets": [
+            {
+              "expr": "consul_kvs_apply",
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "KV Apply Time",
+          "type": "stat"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "description": "Measures the time spent applying transaction operations.",
+          "fieldConfig": {
+            "defaults": {
+              "unit": "ms"
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 78
+          },
+          "hiddenSeries": false,
+          "id": 21,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "7.5.3",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "consul_txn_apply",
+              "interval": "",
+              "legendFormat": "",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Transaction Apply Time",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "ms",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
+        }
+      ],
       "title": "Feature: KV Store",
       "type": "row"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "description": "Shows the rate of KV operations in 5 minute buckets. ",
-      "fieldConfig": {
-        "defaults": {
-          "displayName": "ops/5m",
-          "unit": "ops/5m"
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 16,
-        "w": 12,
-        "x": 0,
-        "y": 83
-      },
-      "hiddenSeries": false,
-      "id": 35,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "rate(consul_kvs_apply_count[5m])",
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "KV Applies per 5m",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "ops/5m",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "datasource": "Prometheus",
-      "description": "This measures the time it takes to complete an update to the KV store.\n\nNOTE: If there are too many timeseries here from clients, consider filtering down to server hosts. You can set this with a prometheus scrape target based on the node's role.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 83
-      },
-      "id": 56,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.5.3",
-      "targets": [
-        {
-          "expr": "consul_kvs_apply",
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "KV Apply Time",
-      "type": "stat"
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "description": "Measures the time spent applying transaction operations.",
-      "fieldConfig": {
-        "defaults": {
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 91
-      },
-      "hiddenSeries": false,
-      "id": 21,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "consul_txn_apply",
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Transaction Apply Time",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "ms",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
       "collapsed": false,
       "datasource": "Prometheus",
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 99
+        "y": 69
       },
       "id": 25,
       "panels": [],
@@ -2387,7 +2640,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 100
+        "y": 70
       },
       "hiddenSeries": false,
       "id": 53,
@@ -2483,7 +2736,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 100
+        "y": 70
       },
       "hiddenSeries": false,
       "id": 55,
@@ -2580,7 +2833,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 108
+        "y": 78
       },
       "hiddenSeries": false,
       "id": 45,
@@ -2676,7 +2929,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 108
+        "y": 78
       },
       "hiddenSeries": false,
       "id": 47,
@@ -2760,7 +3013,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 116
+        "y": 86
       },
       "id": 27,
       "panels": [],
@@ -2787,7 +3040,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 117
+        "y": 87
       },
       "hiddenSeries": false,
       "id": 49,
@@ -2889,7 +3142,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 117
+        "y": 87
       },
       "hiddenSeries": false,
       "id": 51,
@@ -2990,7 +3243,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 125
+        "y": 95
       },
       "hiddenSeries": false,
       "id": 70,
@@ -3111,7 +3364,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 131
+        "y": 101
       },
       "hiddenSeries": false,
       "id": 68,
@@ -3198,6 +3451,493 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "Tracks the number of running goroutines and is a general load pressure indicator. This may burst from time to time but should return to a steady state value.",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 108
+      },
+      "hiddenSeries": false,
+      "id": 93,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "consul_runtime_num_goroutines_value{chef_policy_name=~\"consul_cluster.*|consul-cluster.*\",dc=\"$site\"}",
+          "hide": true,
+          "interval": "",
+          "legendFormat": "{{host}}",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "{__name__=~\"consul_runtime_num_goroutine.*\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Go Routines by Server",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${datasource}",
+      "description": "Increments when a server receives a read RPC request, indicating the rate of new read queries.",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 114
+      },
+      "hiddenSeries": false,
+      "id": 97,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "rate({__name__=~\"consul_rpc_query.*\"}[${interval}])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} rpc.query",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(consul_rpc_request[${interval}])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} rpc.request",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "rate(consul_rpc_raft_handoff[${interval}])",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} rpc.raft.handoff",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Consul RPC Health",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "id"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 260
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Running"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "d"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              },
+              {
+                "id": "custom.displayMode",
+                "value": "color-text"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.width",
+                "value": 89
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Label"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 138
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Working dir"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 162
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Instance"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": null
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 120
+      },
+      "id": 91,
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "(time() - container_start_time_seconds{instance=~\".+\",name=~\"consul-.+\"})/86400",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Containers Info",
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "names": [
+                "container_label_com_docker_compose_project",
+                "container_label_com_docker_compose_project_working_dir",
+                "image",
+                "instance",
+                "name",
+                "Value",
+                "container_label_com_docker_compose_service"
+              ]
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "instance": false
+            },
+            "indexByName": {
+              "Value": 1,
+              "container_label_com_docker_compose_project": 3,
+              "container_label_com_docker_compose_project_working_dir": 4,
+              "container_label_com_docker_compose_service": 2,
+              "image": 6,
+              "instance": 5,
+              "name": 0
+            },
+            "renameByName": {
+              "Value": "Running",
+              "container_label_com_docker_compose_project": "Label",
+              "container_label_com_docker_compose_project_working_dir": "Working dir",
+              "container_label_com_docker_compose_service": "Service",
+              "image": "Registry Image",
+              "instance": "Instance",
+              "name": "Name"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 128
+      },
+      "id": 95,
+      "panels": [],
+      "title": "Not as useful",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "Consul provides per-host stats for runtime.sys_bytes and `runtime.gc_pause_ns `",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 1000000000
+              },
+              {
+                "color": "red",
+                "value": 2000000000
+              }
+            ]
+          },
+          "unit": "ns"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 7,
+        "x": 0,
+        "y": 129
+      },
+      "id": 43,
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "rate(consul_runtime_total_gc_pause_ns[5m])",
+          "interval": "",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Runtime Total GC Pause",
+      "type": "stat"
     }
   ],
   "refresh": "5s",
@@ -3240,7 +3980,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "consul-server-0:8500",
           "value": "consul-server-0:8500"
         },
@@ -3283,11 +4023,133 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "auto": true,
+        "auto_count": 30,
+        "auto_min": "10s",
+        "current": {
+          "selected": false,
+          "text": "1m",
+          "value": "1m"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "label": "Interval",
+        "name": "interval",
+        "options": [
+          {
+            "selected": false,
+            "text": "auto",
+            "value": "$__auto_interval_interval"
+          },
+          {
+            "selected": false,
+            "text": "30s",
+            "value": "30s"
+          },
+          {
+            "selected": true,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "2m",
+            "value": "2m"
+          },
+          {
+            "selected": false,
+            "text": "3m",
+            "value": "3m"
+          },
+          {
+            "selected": false,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "7m",
+            "value": "7m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          }
+        ],
+        "query": "30s,1m,2m,3m,5m,7m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
       }
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -3305,7 +4167,7 @@
     ]
   },
   "timezone": "",
-  "title": "Consul Server Monitoring from grafana Peter2",
+  "title": "Consul Server Monitoring from grafana Peter",
   "uid": "2Rgdm3pGk2",
-  "version": 19
+  "version": 37
 }

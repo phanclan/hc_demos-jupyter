@@ -1,0 +1,9 @@
+.ipynb_checkpoints/
+.DS_Store
+.ipynb_checkpoints
+Vault/Policies/.ipynb_checkpoints/README-checkpoint.md
+terraform.tfstate
+*/config/terraform
+*/config/vault
+config/
+license/
