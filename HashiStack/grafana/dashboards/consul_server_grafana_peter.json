@@ -7,7 +7,9 @@
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
+        "limit": 100,
         "name": "Annotations & Alerts",
+        "showIn": 0,
         "type": "dashboard"
       }
     ]
@@ -17,8 +19,21 @@
   "gnetId": 13396,
   "graphTooltip": 0,
   "id": 5,
-  "iteration": 1638395436816,
-  "links": [],
+  "iteration": 1638490718123,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Consul Telemetry",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://www.consul.io/docs/agent/telemetry"
+    }
+  ],
   "panels": [
     {
       "collapsed": false,
@@ -31,7 +46,7 @@
       },
       "id": 87,
       "panels": [],
-      "title": "Row title",
+      "title": "Overview",
       "type": "row"
     },
     {
@@ -629,7 +644,7 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 5,
-        "w": 9,
+        "w": 8,
         "x": 4,
         "y": 15
       },
@@ -732,7 +747,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "description": "TODO Interrogate the rate interval more\n\nRate of raft commits per server cluster. The commit count is emitted by the leader and can be considered authoritative across a datacenter.",
+      "description": "TODO Interrogate the rate interval more\nRate of raft commits per server cluster. The commit count is emitted by the leader and can be considered authoritative across a datacenter.",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -741,8 +756,8 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 5,
-        "w": 11,
-        "x": 13,
+        "w": 12,
+        "x": 12,
         "y": 15
       },
       "hiddenSeries": false,
@@ -774,7 +789,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(consul_raft_apply[${interval}])",
+          "expr": "rate(consul_raft_apply[${interval}]) >0",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -840,19 +855,19 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
-        "w": 13,
+        "w": 12,
         "x": 0,
         "y": 20
       },
       "hiddenSeries": false,
       "id": 66,
       "legend": {
-        "alignAsTable": true,
+        "alignAsTable": false,
         "avg": false,
         "current": true,
         "max": true,
         "min": false,
-        "rightSide": true,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": true
@@ -875,7 +890,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "consul_raft_commitTime{quantile=\"0.9\"} !=0",
+          "expr": "consul_raft_commitTime{quantile=\"0.9\"} >0",
           "interval": "",
           "legendFormat": "{{instance}}",
           "refId": "A"
@@ -956,8 +971,8 @@
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
-        "w": 11,
-        "x": 13,
+        "w": 12,
+        "x": 12,
         "y": 20
       },
       "hiddenSeries": false,
@@ -1069,24 +1084,83 @@
         "x": 0,
         "y": 27
       },
-      "id": 8,
-      "panels": [],
-      "title": "Consul Server Behavior",
-      "type": "row"
-    },
-    {
-      "collapsed": false,
-      "datasource": "Prometheus",
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 28
-      },
       "id": 10,
       "panels": [],
       "title": "Consul Server Cluster Health - Leadership and Autopilot",
       "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "0 is bad, 1 is ok, >1 is good\nNumber of voting servers that the local server cluster can lose while continuing to function.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0
+              },
+              {
+                "color": "#EAB839",
+                "value": 1
+              },
+              {
+                "color": "green",
+                "value": 2
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 28
+      },
+      "id": 104,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "max(consul_autopilot_failure_tolerance >=0 )",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{instance}} Healthy",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Autopilot Fault Tolerance w/o RZ",
+      "transformations": [],
+      "type": "stat"
     },
     {
       "aliasColors": {},
@@ -1104,21 +1178,23 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 0,
-        "y": 29
+        "h": 5,
+        "w": 8,
+        "x": 4,
+        "y": 28
       },
       "hiddenSeries": false,
       "id": 12,
       "legend": {
+        "alignAsTable": false,
         "avg": false,
-        "current": false,
+        "current": true,
         "max": false,
         "min": false,
+        "rightSide": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1138,11 +1214,11 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "consul_raft_leader_lastContact {quantile=\"0.9\"} != 0",
+          "expr": "consul_raft_leader_lastContact {quantile=\"0.9\"} > 0",
           "format": "time_series",
           "instant": false,
           "interval": "",
-          "legendFormat": "{{instance}}",
+          "legendFormat": "{{instance}} lastContact",
           "refId": "A"
         }
       ],
@@ -1150,7 +1226,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Last Contacted Leader",
+      "title": "Raft Leader Last Contacted",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -1193,31 +1269,33 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "description": "This panel should show \"No data\" in a stable cluster. Some leadership transition events are expected, such as during cluster upgrades. Unexpected events may indicate an issue with cluster stability. ",
+      "description": "This panel should show \"`No data`\" in a stable cluster. Some leadership transition events are expected, such as during cluster upgrades. Unexpected events may indicate an issue with cluster stability. ",
       "fieldConfig": {
         "defaults": {
           "unit": "none"
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 0,
       "gridPos": {
-        "h": 7,
+        "h": 5,
         "w": 12,
         "x": 12,
-        "y": 29
+        "y": 28
       },
       "hiddenSeries": false,
       "id": 16,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
-        "max": false,
+        "current": true,
+        "max": true,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -1237,7 +1315,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "consul_raft_state_candidate",
+          "expr": "consul_raft_state_candidate >0",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -1246,7 +1324,7 @@
         },
         {
           "exemplar": true,
-          "expr": "consul_raft_state_leader",
+          "expr": "consul_raft_state_leader >0",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
@@ -1258,7 +1336,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Raft Election Events",
+      "title": "Raft Election Events - stack",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1296,17 +1374,271 @@
       }
     },
     {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "~ ns is normal\n> 2s/minute is not good\n> 5s/min is bad\nNumber of nanoseconds consumed by stop-the-world garbage collection (GC) pauses since Consul started.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ns"
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 0,
+        "y": 33
+      },
+      "hiddenSeries": false,
+      "id": 43,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "maxDataPoints": 100,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "rate(consul_runtime_total_gc_pause_ns[1m])",
+          "interval": "",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": false,
+          "line": true,
+          "op": "gt",
+          "value": 5000000000,
+          "yaxis": "left"
+        },
+        {
+          "colorMode": "warning",
+          "fill": false,
+          "line": true,
+          "op": "gt",
+          "value": 2000000000,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Runtime Total GC Pause per 1m",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ns",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${datasource}",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 8,
+        "y": 33
+      },
+      "hiddenSeries": false,
+      "id": 111,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(consul_raft_replication_appendEntries_rpc{quantile=\"0.99\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "AppendEntries RPC p99 {{ peer_id}}",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_raft_replication_appendEntries_rpc_sum/consul_raft_replication_appendEntries_rpc_count)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "AppendEntris RPC mean {{ peer_id}}",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_raft_rpc_appendEntries{quantile=\"0.99\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "AppendEntries p99 {{host}}",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_raft_rpc_appendEntries_sum / consul_raft_rpc_appendEntries_count)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "AppendEntries mean {{host}}",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_raft_rpc_appendEntries_storeLogs{quantile=\"0.99\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "storeLogs p99 {{ host }}",
+          "refId": "E"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_raft_rpc_appendEntries_storeLogs_sum / consul_raft_rpc_appendEntries_storeLogs_count)",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "storeLogs mean {{ host }}",
+          "refId": "F"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Consul Raft AppendEntries RPC",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
       "collapsed": false,
       "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 39
       },
       "id": 99,
       "panels": [],
-      "title": "Network Activity - RPC Count - Shows current load created from Agents",
+      "title": "Network Activity - RPC Count - current load created from Agents",
       "type": "row"
     },
     {
@@ -1327,15 +1659,15 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 37
+        "y": 40
       },
       "hiddenSeries": false,
       "id": 101,
       "legend": {
         "alignAsTable": true,
-        "avg": true,
-        "current": false,
-        "max": true,
+        "avg": false,
+        "current": true,
+        "max": false,
         "min": false,
         "rightSide": true,
         "show": true,
@@ -1436,7 +1768,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 37
+        "y": 40
       },
       "hiddenSeries": false,
       "id": 102,
@@ -1533,7 +1865,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 43
+        "y": 46
       },
       "id": 31,
       "panels": [],
@@ -1568,7 +1900,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 47
       },
       "id": 33,
       "options": {
@@ -1616,7 +1948,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 45
+        "y": 48
       },
       "hiddenSeries": false,
       "id": 89,
@@ -1713,7 +2045,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 45
+        "y": 48
       },
       "hiddenSeries": false,
       "id": 62,
@@ -1823,14 +2155,242 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 52
+        "y": 55
       },
       "hiddenSeries": false,
       "id": 58,
       "legend": {
         "alignAsTable": true,
-        "avg": true,
-        "current": false,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sideWidth": null,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(rate(container_network_receive_bytes_total{image!=\"\",name=~\"consul-.*\"}[$interval])) by (name)",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{name}} recv",
+          "metric": "container_network_receive_bytes_total",
+          "refId": "A",
+          "step": 20
+        },
+        {
+          "exemplar": true,
+          "expr": "sum(rate(container_network_transmit_bytes_total{image!=\"\",name=~\"consul-.*\"}[$interval])) by (name)",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{name}} sent",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": false,
+          "line": true,
+          "op": "gt",
+          "value": 100000,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Network Bytes Send and Received",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "Bps",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 14,
+        "w": 12,
+        "x": 12,
+        "y": 55
+      },
+      "hiddenSeries": false,
+      "id": 105,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "consul_runtime_alloc_bytes{instance=~\"consul-server.+\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} alloc",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "consul_runtime_sys_bytes{instance=~\"consul-server.+\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} sys",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Consul Memory Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "sum(rate(container_network_receive_bytes_total{image!=\"\",name=~\"consul-.*\"}[5m])) by (name)",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 62
+      },
+      "hiddenSeries": false,
+      "id": 103,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
         "hideEmpty": false,
         "max": true,
         "min": false,
@@ -1859,22 +2419,22 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(rate(container_network_receive_bytes_total{image!=\"\",name=~\"consul-.*\"}[$interval])) by (name)",
+          "expr": "sum(rate(container_network_receive_packets_total{image!=\"\",name=~\"consul-.*\"}[$interval])) by (name)",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{name}}",
+          "legendFormat": "{{name}} recv",
           "metric": "container_network_receive_bytes_total",
           "refId": "A",
           "step": 20
         },
         {
           "exemplar": true,
-          "expr": "sum(rate(container_network_transmit_bytes_total{image!=\"\",name=~\"consul-.*\"}[5m])) by (name)",
-          "hide": true,
+          "expr": "sum(rate(container_network_transmit_packets_total{image!=\"\",name=~\"consul-.*\"}[$interval])) by (name)",
+          "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{name}} Transmit",
+          "legendFormat": "{{name}} sent",
           "refId": "B"
         }
       ],
@@ -1884,14 +2444,14 @@
           "fill": false,
           "line": true,
           "op": "gt",
-          "value": 100000,
+          "value": 100,
           "yaxis": "left"
         }
       ],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Network Rx",
+      "title": "Network Packets Send and Received",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1907,108 +2467,7 @@
       },
       "yaxes": [
         {
-          "format": "Bps",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "unit": "Bps"
-        },
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 7,
-        "w": 12,
-        "x": 12,
-        "y": 52
-      },
-      "hiddenSeries": false,
-      "id": 60,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "sum(rate(container_network_transmit_bytes_total{image!=\"\",name=~\"consul-.*\"}[5m])) by (name)",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "{{name}}",
-          "refId": "A",
-          "step": 20
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Network Tx",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "Bps",
+          "format": "pps",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -2036,7 +2495,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 59
+        "y": 69
       },
       "id": 23,
       "panels": [],
@@ -2060,7 +2519,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 60
+        "y": 70
       },
       "hiddenSeries": false,
       "id": 29,
@@ -2159,7 +2618,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 60
+        "y": 70
       },
       "hiddenSeries": false,
       "id": 39,
@@ -2256,7 +2715,7 @@
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 60
+        "y": 70
       },
       "hiddenSeries": false,
       "id": 37,
@@ -2343,7 +2802,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 68
+        "y": 78
       },
       "id": 18,
       "panels": [
@@ -2613,7 +3072,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 69
+        "y": 79
       },
       "id": 25,
       "panels": [],
@@ -2640,7 +3099,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 70
+        "y": 80
       },
       "hiddenSeries": false,
       "id": 53,
@@ -2736,7 +3195,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 70
+        "y": 80
       },
       "hiddenSeries": false,
       "id": 55,
@@ -2766,9 +3225,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "consul_acl_ResolveToken",
+          "exemplar": true,
+          "expr": "consul_acl_ResolveToken{quantile=\"0.9\"}",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{instance}}",
           "refId": "A"
         }
       ],
@@ -2833,7 +3293,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 78
+        "y": 88
       },
       "hiddenSeries": false,
       "id": 45,
@@ -2929,18 +3389,18 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 78
+        "y": 88
       },
       "hiddenSeries": false,
       "id": 47,
       "legend": {
         "avg": false,
-        "current": false,
-        "max": false,
+        "current": true,
+        "max": true,
         "min": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -2959,9 +3419,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "consul_acl_apply",
+          "exemplar": true,
+          "expr": "consul_acl_apply{quantile=\"0.9\"}",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{instance}}",
           "refId": "A"
         }
       ],
@@ -3013,7 +3474,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 86
+        "y": 96
       },
       "id": 27,
       "panels": [],
@@ -3040,7 +3501,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 87
+        "y": 97
       },
       "hiddenSeries": false,
       "id": 49,
@@ -3142,18 +3603,20 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 87
+        "y": 97
       },
       "hiddenSeries": false,
       "id": 51,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
-        "current": false,
-        "max": false,
+        "current": true,
+        "max": true,
         "min": false,
+        "rightSide": true,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
       "lines": true,
       "linewidth": 1,
@@ -3172,15 +3635,17 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "consul_catalog_register",
+          "exemplar": true,
+          "expr": "consul_catalog_register{quantile=\"0.9\"}",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{instance}} register",
           "refId": "A"
         },
         {
-          "expr": "consul_catalog_deregister",
+          "exemplar": true,
+          "expr": "consul_catalog_deregister{quantile=\"0.9\"}",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{instance}} deregister",
           "refId": "B"
         }
       ],
@@ -3243,7 +3708,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 95
+        "y": 105
       },
       "hiddenSeries": false,
       "id": 70,
@@ -3348,109 +3813,18 @@
       }
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "Prometheus",
-      "description": "This increments for each health query for the given service.",
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "fill": 1,
-      "fillGradient": 0,
+      "collapsed": false,
+      "datasource": null,
       "gridPos": {
-        "h": 7,
+        "h": 1,
         "w": 24,
         "x": 0,
-        "y": 101
+        "y": 111
       },
-      "hiddenSeries": false,
-      "id": 68,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.3",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "topk(5, sum(consul_health_service_query_value) by (service))",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{ service }}",
-          "refId": "A"
-        },
-        {
-          "exemplar": true,
-          "expr": "topk(5, sum(rate(consul_health_service_query[5m])) by (service))",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{ service }}",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Top 5 Queried Services by Health",
-      "tooltip": {
-        "shared": true,
-        "sort": 2,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
+      "id": 95,
+      "panels": [],
+      "title": "Misc",
+      "type": "row"
     },
     {
       "aliasColors": {},
@@ -3471,7 +3845,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 108
+        "y": 112
       },
       "hiddenSeries": false,
       "id": 93,
@@ -3582,7 +3956,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 114
+        "y": 118
       },
       "hiddenSeries": false,
       "id": 97,
@@ -3644,6 +4018,414 @@
       "timeRegions": [],
       "timeShift": null,
       "title": "Consul RPC Health",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${datasource}",
+      "description": "fsm.apply The number of logs committed since the last interval.\nfsm.register - Measures the time it takes to apply a catalog register operation to the FSM.",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 124
+      },
+      "hiddenSeries": false,
+      "id": 107,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(consul_fsm_txn{quantile=\"0.99\"})",
+          "interval": "",
+          "legendFormat": "fsm.txn p99",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_fsm_kvs {quantile=\"0.99\"})",
+          "interval": "",
+          "legendFormat": "fsm.kvs p99",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_fsm_coordinate_batch_update {quantile=\"0.99\"})",
+          "interval": "",
+          "legendFormat": "fsm.coordinate p99",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_fsm_persist{quantile=\"0.99\"})",
+          "interval": "",
+          "legendFormat": "fsm.persist p99",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_raft_fsm_apply{quantile=\"0.99\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.apply p99",
+          "refId": "E"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_fsm_register{quantile=\"0.99\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.register p99",
+          "refId": "F"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(consul_fsm_deregister{quantile=\"0.99\"})",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.deregister p99",
+          "refId": "G"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Consul Finite State Machine (p99)",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${datasource}",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 124
+      },
+      "hiddenSeries": false,
+      "id": 109,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": "current",
+        "sortDesc": true,
+        "total": true,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "avg(rate(consul_fsm_txn_count[${interval}]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.txn count",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(rate(consul_fsm_kvs_count[${interval}]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.kvs count",
+          "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(rate(consul_fsm_coordinate_count[${interval}]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.coordinate count",
+          "refId": "C"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(rate(consul_fsm_persist_count[${interval}]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.persist count",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(rate(consul_raft_fsm_apply_count[${interval}]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.apply count",
+          "refId": "E"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(rate(consul_fsm_register_count[${interval}]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.register count",
+          "refId": "F"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(rate(consul_fsm_deregister_count[${interval}]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.deregister count",
+          "refId": "G"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(rate(consul_fsm_session_count[${interval}]))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "fsm.session count",
+          "refId": "H"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Consul Finite State Machine (Count)",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "This increments for each health query for the given service.",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 130
+      },
+      "hiddenSeries": false,
+      "id": 68,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "topk(5, sum(consul_health_service_query_value) by (service))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ service }}",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "topk(5, sum(rate(consul_health_service_query[5m])) by (service))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{ service }}",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Top 5 Queried Services by Health",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -3789,7 +4571,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 120
+        "y": 137
       },
       "id": 91,
       "options": {
@@ -3856,91 +4638,9 @@
         }
       ],
       "type": "table"
-    },
-    {
-      "collapsed": false,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 128
-      },
-      "id": 95,
-      "panels": [],
-      "title": "Not as useful",
-      "type": "row"
-    },
-    {
-      "datasource": "Prometheus",
-      "description": "Consul provides per-host stats for runtime.sys_bytes and `runtime.gc_pause_ns `",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 1000000000
-              },
-              {
-                "color": "red",
-                "value": 2000000000
-              }
-            ]
-          },
-          "unit": "ns"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 0,
-        "y": 129
-      },
-      "id": 43,
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "background",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "mean"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.5.3",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "rate(consul_runtime_total_gc_pause_ns[5m])",
-          "interval": "",
-          "legendFormat": "{{instance}}",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Runtime Total GC Pause",
-      "type": "stat"
     }
   ],
-  "refresh": "5s",
+  "refresh": "10s",
   "schemaVersion": 27,
   "style": "dark",
   "tags": [],
@@ -4030,8 +4730,8 @@
         "auto_min": "10s",
         "current": {
           "selected": false,
-          "text": "1m",
-          "value": "1m"
+          "text": "30s",
+          "value": "30s"
         },
         "description": null,
         "error": null,
@@ -4045,12 +4745,12 @@
             "value": "$__auto_interval_interval"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "30s",
             "value": "30s"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "1m",
             "value": "1m"
           },
@@ -4169,5 +4869,5 @@
   "timezone": "",
   "title": "Consul Server Monitoring from grafana Peter",
   "uid": "2Rgdm3pGk2",
-  "version": 37
+  "version": 61
 }

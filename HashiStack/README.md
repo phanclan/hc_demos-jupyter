@@ -2,13 +2,31 @@
 
 Official Docs: https://jupyterlab.readthedocs.io/en/stable/
 
+## Clone Repo
+```shell
+#// Create parent directory
+mkdir -p code
+git clone https://github.com/phanclan/hc_demos-jupyter code/hc_demos-jupyter
+```
+
+
 ### Linux
 
 ```shell
 sudo apt-get update && \
-sudo apt-get -y install python3 python3-pip
+sudo apt-get -qq install unzip jq \
+    python3 python3-pip 
+
+### begin optional python venv
+sudo apt-get -qq install python3-venv python3-dev build-essential
+mkdir venv && cd venv
+python3 -m venv jup1
+source jup1/bin/activate
+### end optional python venv
+
 pip3 install jupyterlab
-pip3 install bash_kernel && python3 -m bash_kernel.install
+pip3 install bash_kernel
+python3 -m bash_kernel.install
 ```
 
 Add this to path if needed. example for `~/.profile`
@@ -31,15 +49,9 @@ pip3 install bash_kernel
 python3 -m bash_kernel.install
 ```
 
+## Start JupyterLab
 
-### Clone Repo
 ```shell
-#// Create parent directory
-mkdir -p code
-git clone https://github.com/phanclan/hc_demos-jupyter code/hc_demos-jupyter
-```
-
-```
 nohup jupyter lab --ip=0.0.0.0 --port=8888 \
   --no-browser --notebook-dir=code/ \
   > /tmp/jupyterlab.out 2>&1 &
@@ -63,33 +75,13 @@ For the HashiStack content, go to `HashiStack` and open `hashi_playground.ipynb`
 
 Enjoy!!!
 
-### Install Hashi
-
-```shell
-ARCH=arm64 #amd64
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add - && \
-sudo apt-add-repository "deb [arch=${ARCH}] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-sudo apt-get update && sudo apt-get install nomad -y
-```
-
-
-
-## Uninstall
-https://www.py4u.net/discuss/16601
-
-```shell
-pip3 uninstall jupyterlab
-pip3 uninstall jupyter_core
-pip3 uninstall bash_kernel
-```
-
 ## Hardware
 
 Here's what I'm using
 
 * Raspberry Pi 4 8GB
 * Samsung 256GB microSD
-* (optional) USB 3 SSD
+* (optional) USB3 SSD
 * HDMI Cable
 * USB-A to USB-C for power
 * (optional) Network cable for wired ethernet

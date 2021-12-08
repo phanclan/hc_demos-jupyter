@@ -114,6 +114,7 @@ services:
       - ./consul/cert/server:/consul/cert
       - /consul/data
       - ./consul/policies:/consul/policies
+    command: "agent -datacenter=${CONSUL_DC_2} -server -bootstrap-expect 3 -config-dir=/consul/config"
     networks:
       vpcbr:
         ipv4_address: 10.5.1.3
@@ -132,6 +133,7 @@ services:
       - "8620:8600/tcp"
       - "8620:8600/udp"
       - "8520:8500/tcp"
+    command: "agent -datacenter=${CONSUL_DC_2} -server -bootstrap-expect 3 -config-dir=/consul/config"
     networks:
       vpcbr:
         ipv4_address: 10.5.1.4
