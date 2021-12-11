@@ -1,0 +1,9 @@
+{
+  "service": {
+    "name": "web",
+    "tags": [
+      "bedev2", "golang"
+    ],
+    "port": 80
+  }
+}
