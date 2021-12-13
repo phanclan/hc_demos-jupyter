@@ -1,6 +1,10 @@
-# Installation / Configuration of Jupyterlab
+# 
 
-Official Docs: https://jupyterlab.readthedocs.io/en/stable/
+These notebooks will you help stand up a HashiStack for demo and lab purposes.
+
+The main notebook is - `hashi_playground.yml`.
+
+To run these notebooks and the code inside of them you will need the following prerequisites.
 
 ## Clone Repo
 ```shell
@@ -9,6 +13,9 @@ mkdir -p code
 git clone https://github.com/phanclan/hc_demos-jupyter code/hc_demos-jupyter
 ```
 
+## Install/Configure Jupyterlab
+
+Official Docs: https://jupyterlab.readthedocs.io/en/stable/
 
 ### Linux
 
@@ -29,7 +36,7 @@ pip3 install bash_kernel
 python3 -m bash_kernel.install
 ```
 
-Add this to path if needed. example for `~/.profile`
+Add this to PATH if needed. example for `~/.profile`
 ```shell
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/.local/bin" ] ; then
