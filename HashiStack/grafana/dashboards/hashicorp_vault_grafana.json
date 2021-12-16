@@ -16,8 +16,8 @@
   "editable": true,
   "gnetId": 12904,
   "graphTooltip": 1,
-  "id": 10,
-  "iteration": 1639118920181,
+  "id": 5,
+  "iteration": 1639602505118,
   "links": [],
   "panels": [
     {
@@ -2167,82 +2167,66 @@
       }
     },
     {
-      "aliasColors": {
-        "Create": "rgb(84, 183, 90)",
-        "Store": "#0a437c"
-      },
-      "bars": true,
+      "aliasColors": {},
+      "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "decimals": 0,
+      "description": "Total number of distinct entities that created a token during the current month. Only available if client count is enabled. Reported periodically within each month.",
       "fieldConfig": {
-        "defaults": {
-          "links": []
-        },
+        "defaults": {},
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 0,
       "gridPos": {
         "h": 6,
-        "w": 12,
+        "w": 8,
         "x": 12,
         "y": 48
       },
       "hiddenSeries": false,
-      "id": 6,
+      "id": 259,
       "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
+        "alignAsTable": false,
+        "avg": true,
+        "current": true,
+        "max": true,
         "min": false,
+        "rightSide": false,
         "show": true,
         "total": false,
-        "values": false
+        "values": true
       },
-      "lines": false,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "connected",
       "options": {
         "alertThreshold": true
       },
       "percentage": false,
       "pluginVersion": "7.5.3",
-      "pointradius": 5,
+      "pointradius": 2,
       "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
-      "stack": true,
+      "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg without(instance) (vault_token_create_count)",
-          "format": "time_series",
-          "instant": false,
+          "exemplar": true,
+          "expr": "vault_identity_entity_active_partial_month",
           "interval": "",
-          "intervalFactor": 10,
-          "legendFormat": "Create",
+          "legendFormat": "{{cluster}} Active Entities",
           "refId": "A"
-        },
-        {
-          "expr": "avg without(instance) (vault_token_store_count)",
-          "format": "time_series",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 10,
-          "legendFormat": "Store",
-          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Token Creation/Storage",
+      "title": "Identity Entity Active Partial Month - pp",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2258,8 +2242,8 @@
       },
       "yaxes": [
         {
-          "decimals": 0,
-          "format": "short",
+          "$$hashKey": "object:132",
+          "format": "none",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -2267,12 +2251,13 @@
           "show": true
         },
         {
+          "$$hashKey": "object:133",
           "format": "short",
           "label": null,
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": false
+          "show": true
         }
       ],
       "yaxis": {
@@ -2373,6 +2358,120 @@
         },
         {
           "$$hashKey": "object:2026",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "Create": "rgb(84, 183, 90)",
+        "Store": "#0a437c"
+      },
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "decimals": 0,
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 54
+      },
+      "hiddenSeries": false,
+      "id": 6,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "avg without(instance) (vault_token_create_count)",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "Create",
+          "refId": "A"
+        },
+        {
+          "expr": "avg without(instance) (vault_token_store_count)",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 10,
+          "legendFormat": "Store",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Token Creation/Storage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 0,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -3518,5 +3617,5 @@
   "timezone": "",
   "title": "Hashicorp Vault",
   "uid": "vaults",
-  "version": 28
+  "version": 74
 }
