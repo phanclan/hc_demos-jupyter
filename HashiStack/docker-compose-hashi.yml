@@ -21,9 +21,10 @@ networks:
 
 services:
   x-consul: &consul
-    image: hashicorp/consul-enterprise:1.9.13-ent
+    image: hashicorp/consul-enterprise:1.11.2-ent #1.9.13-ent
     environment:
       - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
+      - CONSUL_LICENSE=${CONSUL_LICENSE}
     # logging:
     #   driver: loki
     #   options:
