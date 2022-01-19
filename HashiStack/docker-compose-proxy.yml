@@ -1,4 +1,6 @@
-version: '3.8'
+---
+
+version: "3.8"
 # networks:
 #   vpcbr:
 #     external: true
@@ -55,7 +57,7 @@ services:
 
 
   prometheus:
-    image: prom/prometheus:v2.26.0
+    image: prom/prometheus:v2.32.1 #v2.26.0
     container_name: prometheus
     restart: always
     volumes:
@@ -71,7 +73,7 @@ services:
       - "9090:9090"
 
   grafana:
-    image: grafana/grafana:7.5.3
+    image: grafana/grafana:8.3.4 #7.5.3
     container_name: grafana
     restart: always
     volumes:
@@ -90,10 +92,12 @@ services:
       - "3000:3000"
 
   cadvisor:
-    # image: gcr.io/cadvisor/cadvisor:latest #non arm64
-    image: raymondmm/cadvisor #arm64
+    # image: gcr.io/cadvisor/cadvisor:latest #// non arm64
+    # image: raymondmm/cadvisor              #// arm64
+    image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
     restart: on-failure
+    privileged: true
     ports:
       - 8080:8080
     volumes:
@@ -109,35 +113,3 @@ services:
     networks:
       vpcbr:
         ipv4_address: 10.5.0.11
-
-  # apache_img_1:
-  #   container_name: apache_con_1
-  #   build: ./apache/1
-  #   expose:
-  #     - ${APACHE_EXPOSED_PORT}
-  #   networks:
-  #     vpcbr:
-  #       ipv4_address: ${APACHE_1_IP}
-  # apache_img_2:
-  #   container_name: apache_con_2
-  #   build: ./apache/2
-  #   expose:
-  #     - ${APACHE_EXPOSED_PORT}
-  #   networks:
-  #     vpcbr:
-  #       ipv4_address: ${APACHE_2_IP}
-  # haproxy_img:
-  #   # build: ./haproxy
-  #   image: haproxy:1.7 #2.0
-  #   container_name: haproxy_test
-  #   ports:
-  #     - 1080:80
-  #   networks:
-  #     vpcbr:
-  #       ipv4_address: ${HA_PROXY_IP}
-  #   environment:
-  #     - APACHE_1_IP=${APACHE_1_IP}
-  #     - APACHE_2_IP=${APACHE_2_IP}
-  #     - APACHE_EXPOSED_PORT=${APACHE_EXPOSED_PORT}
-  #   volumes:
-  #     - ./docker/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro

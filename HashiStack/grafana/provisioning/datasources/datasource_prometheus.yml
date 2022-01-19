@@ -9,7 +9,7 @@ datasources:
   orgId: 1
   url: http://prometheus:9090
   # basicAuth: false
-  isDefault: false
+  isDefault: true
   version: 1
   editable: true
   apiVersion: 1

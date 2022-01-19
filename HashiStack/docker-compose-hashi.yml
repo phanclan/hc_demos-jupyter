@@ -1,4 +1,9 @@
+---
+
 version: "3.8"
+# For single-value options like image, command or mem_limit, the new value replaces the old value.
+# For multi-value options ports, expose, external_links, dns, dns_search, and tmpfs, Compose concatenates both sets of values:
+# For environment, labels, volumes, and devices, Compose “merges” entries together with locally-defined values taking precedence.
 
 networks:
   vpcbr:
@@ -16,7 +21,7 @@ networks:
 
 services:
   x-consul: &consul
-    image: hashicorp/consul-enterprise:1.9-ent
+    image: hashicorp/consul-enterprise:1.9.13-ent
     environment:
       - CONSUL_LICENSE_PATH=/consul/cert/consul.hclic
     # logging:
@@ -139,7 +144,7 @@ services:
         ipv4_address: 10.5.1.4
 
   x-vault: &vault
-    image: hashicorp/vault-enterprise:1.8.5_ent
+    image: hashicorp/vault-enterprise:1.9.2-ent #1.8.5_ent, suffic can - or _
     environment:
       - VAULT_ADDR=http://127.0.0.1:8200
       #- VAULT_CLUSTER_INTERFACE=eth0
@@ -177,8 +182,6 @@ services:
       - ./vault/config/vault.hclic:/vault/config/vault.hclic
       - /vault/data
       - ./vault/logs/vault_s2:/vault/logs
-    depends_on:
-      - vault_s1
     command: vault server -config=/vault/config
     networks:
       vpcbr:
