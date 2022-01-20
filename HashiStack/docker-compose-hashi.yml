@@ -153,6 +153,7 @@ services:
       #- VAULT_API_ADDR=http://vault01:8200
       - VAULT_LOG_LEVEL=debug
       - VAULT_LICENSE_PATH=/vault/config/vault.hclic
+      - VAULT_LICENSE=${VAULT_LICENSE}
     command: vault server -config=/vault/config
     cap_add:
       - IPC_LOCK
