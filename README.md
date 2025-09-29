@@ -49,64 +49,35 @@ Jupyter excels when:
 
 ---
 
-## Installation / Configuration of Jupyterlab
+## Quick Setup
 
-Official Docs: https://jupyterlab.readthedocs.io/en/stable/
-
-### Mac / Homebrew
-
-```shell
-brew update && brew doctor
-brew install python3
-brew install jupyterlab
-pip3 install --upgrade pip wheel setuptools
-#pip3 install ipykernel #installed with jupyterlab
-pip3 install bash_kernel
-python3 -m bash_kernel.install
+### 1. Create Virtual Environment
+```bash
+# In the project directory
+mkdir jupyter-env && cd jupyter-env
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-For a more custom environment
-
-```shell
-brew upgrade
-brew install pyenv
-pyenv versions
-echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+### 2. Install JupyterLab + Bash Kernel
+```bash
+pip install jupyterlab bash_kernel
+python -m bash_kernel.install
 ```
 
-Additional Reference:
-https://medium.com/@blessedmarcel1/how-to-install-jupyter-notebook-on-mac-using-homebrew-528c39fd530f
-
-### Windows
-
-You need to do more - install Anaconda and configure: https://mycarta.wordpress.com/2019/07/09/from-zero-to-jupyterlab-pro-on-windows-10/
-
----
-
-## Start Jupyter Lab - Mac and Windows
-
-Go to a folder that holds or will hold your Jupyter Notebook.
-Start up Jupyter Lab
-
-Mac :
-
-If installed from `brew`
-```shell
-jupyter lab
+### 3. Start JupyterLab
+```bash
+# From project root directory
+source jupyter-env/venv/bin/activate
+jupyter lab --ip=127.0.0.1 --port=8888 --no-browser --notebook-dir=.
 ```
 
-If installed from `pip`
-```shell
-jupyter-lab
+Or use the provided start script:
+```bash
+./jupyter-env/start-jupyter.sh
 ```
 
-or
-
-Windows :
-
-```
-Jupyter lab
-```
+Access at: http://localhost:8888
 
 ## Clear outputs
 
